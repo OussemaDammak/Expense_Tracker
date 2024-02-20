@@ -25,6 +25,12 @@ class _ExpensesState extends State<Expenses> {
       date: DateTime.now(),
       category: Category.leisure,
     ),
+    Expense(
+      title: 'Hotel',
+      amount: 29.39,
+      date: DateTime.now(),
+      category: Category.travel,
+    ),
   ];
 
   @override
