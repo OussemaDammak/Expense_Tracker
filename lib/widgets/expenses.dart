@@ -13,26 +13,7 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
-  final List<Expense> _registredExpenses = [
-    Expense(
-      title: 'Flutter Course',
-      amount: 19.99,
-      date: DateTime.now(),
-      category: Category.work,
-    ),
-    Expense(
-      title: 'Cinema',
-      amount: 15.69,
-      date: DateTime.now(),
-      category: Category.leisure,
-    ),
-    Expense(
-      title: 'Hotel',
-      amount: 29.39,
-      date: DateTime.now(),
-      category: Category.travel,
-    ),
-  ];
+  final List<Expense> _registredExpenses = [];
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
@@ -49,13 +30,39 @@ class _ExpensesState extends State<Expenses> {
   }
 
   void _removeExpense(Expense expense) {
+    final _expenseIndex = _registredExpenses.indexOf(expense);
     setState(() {
       _registredExpenses.remove(expense);
     });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        content: const Text('Expense Deleted'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              _registredExpenses.insert(_expenseIndex, expense);
+            });
+          },
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget mainContent = const Center(
+      child: Text('No expense found , start adding'),
+    );
+    if (_registredExpenses.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses: _registredExpenses,
+        onRemoveExpense: _removeExpense,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter ExpenseTracker'),
@@ -70,10 +77,7 @@ class _ExpensesState extends State<Expenses> {
         children: [
           const Text('Chart'),
           Expanded(
-            child: ExpensesList(
-              expenses: _registredExpenses,
-              onRemoveExpense: _removeExpense,
-            ),
+            child: mainContent,
           ),
         ],
       ),
