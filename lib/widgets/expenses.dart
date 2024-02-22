@@ -17,20 +17,16 @@ class _ExpensesState extends State<Expenses> {
   final List<Expense> _registredExpenses = [
     Expense(
       title: "Hola",
-      amount: 15.99 ,
-      date: DateTime.now() ,
-      category: Category.food ,
-
+      amount: 15.99,
+      date: DateTime.now(),
+      category: Category.food,
     ),
     Expense(
       title: "Hola2",
-      amount: 79 ,
-      date: DateTime.now() ,
-      category: Category.food ,
-
+      amount: 79,
+      date: DateTime.now(),
+      category: Category.food,
     ),
-
-
   ];
 
   void _openAddExpenseOverlay() {
@@ -71,6 +67,8 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     Widget mainContent = const Center(
       child: Text('No expense found , start adding'),
     );
@@ -91,14 +89,25 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registredExpenses),
-          Expanded(
-            child: mainContent,
-          ),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registredExpenses),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Chart(expenses: _registredExpenses),
+                ),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            ),
     );
   }
 }
